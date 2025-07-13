@@ -1,11 +1,12 @@
-package app
+package factory
 
 import (
 	"boilerplate-one/internal/config"
+	"boilerplate-one/internal/domain/auth"
 	"boilerplate-one/internal/domain/user"
+
 	"boilerplate-one/internal/infrastructure/db"
 	"boilerplate-one/internal/infrastructure/migration"
-	"boilerplate-one/internal/infrastructure/repo"
 	"os"
 
 	"gorm.io/gorm"
@@ -16,6 +17,7 @@ type Factory struct {
 
 	// Domain
 	UserHandler *user.UserHandler
+	AuthHandler *auth.AuthHandler
 }
 
 func NewFactory(config *config.Config) *Factory {
@@ -28,13 +30,11 @@ func NewFactory(config *config.Config) *Factory {
 		os.Exit(0)
 	}
 
-	// Inisialisasi domain user
-	userRepo := repo.NewUserRepository(database)
-	userService := user.NewService(userRepo)
-	userHandler := user.NewUserHandler(userService)
-
+	userHandler := NewUserFactory(database)
+	authHandler := NewAuthFactory(database)
 	return &Factory{
 		DB:          database,
 		UserHandler: userHandler,
+		AuthHandler: authHandler,
 	}
 }

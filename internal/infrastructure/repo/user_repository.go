@@ -1,9 +1,8 @@
 package repo
 
 import (
-	"context"
-
 	"boilerplate-one/internal/domain/user"
+	"context"
 
 	"gorm.io/gorm"
 )

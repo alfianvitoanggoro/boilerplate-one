@@ -1,6 +1,9 @@
 package app
 
 import (
+	"boilerplate-one/internal/app/factory"
+	"boilerplate-one/internal/app/middleware"
+	"boilerplate-one/internal/app/router"
 	"boilerplate-one/internal/config"
 
 	"github.com/gofiber/fiber/v2"
@@ -9,11 +12,11 @@ import (
 func BuildApp(config *config.Config) *fiber.App {
 	app := fiber.New()
 
-	RegisterMiddleware(app)
+	middleware.RegisterMiddleware(app)
 
-	factory := NewFactory(config) // Inisialisasi semua dependency
+	fac := factory.NewFactory(config) // Inisialisasi semua dependency
 
-	InitRouter(app, factory, config) // Daftarkan semua route
+	router.InitRouter(app, fac, config) // Daftarkan semua route
 
 	return app
 }
