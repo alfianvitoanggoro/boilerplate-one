@@ -15,6 +15,9 @@ import (
 type Factory struct {
 	DB *gorm.DB
 
+	// Repositories
+	UserRepo user.Repository
+
 	// Domain
 	UserHandler *user.UserHandler
 	AuthHandler *auth.AuthHandler
@@ -30,10 +33,11 @@ func NewFactory(config *config.Config) *Factory {
 		os.Exit(0)
 	}
 
-	userHandler := NewUserFactory(database)
+	userHandler, userRepo := NewUserFactory(database)
 	authHandler := NewAuthFactory(database)
 	return &Factory{
 		DB:          database,
+		UserRepo:    userRepo,
 		UserHandler: userHandler,
 		AuthHandler: authHandler,
 	}

@@ -2,6 +2,7 @@ package router
 
 import (
 	"boilerplate-one/internal/app/factory"
+	"boilerplate-one/internal/app/middleware"
 	"boilerplate-one/internal/config"
 	"fmt"
 
@@ -19,7 +20,12 @@ func InitRouter(app *fiber.App, f *factory.Factory, config *config.Config) {
 	authGroup := api.Group("/auth")
 	authRouter(authGroup, f.AuthHandler)
 
-	// Register user router
-	userGroup := api.Group("/users")
-	userRouter(userGroup, f.UserHandler)
+	// 🔓 Public user routes (tanpa JWT)
+	publicUserGroup := api.Group("/users")
+	publicUserRouter(publicUserGroup, f.UserHandler)
+
+	// 🔐 Protected user routes (dengan JWT)
+	privateUserGroup := api.Group("/users")
+	privateUserGroup.Use(middleware.JWTMiddleware(f.UserRepo))
+	privateUserRouter(privateUserGroup, f.UserHandler)
 }

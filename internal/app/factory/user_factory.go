@@ -7,8 +7,10 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewUserFactory(database *gorm.DB) *user.UserHandler {
+func NewUserFactory(database *gorm.DB) (*user.UserHandler, user.Repository) {
 	userRepo := repo.NewUserRepository(database)
 	userService := user.NewService(userRepo)
-	return user.NewUserHandler(userService)
+	userHandler := user.NewUserHandler(userService)
+
+	return userHandler, userRepo
 }
